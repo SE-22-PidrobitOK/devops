@@ -45,6 +45,26 @@ services:
     networks:
       - backend-network
 
+  job-service:
+    image: andriilavrovnure/pidrobitok-job-service:latest
+    expose:
+      - "8080"
+      - "8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - SQL_SERVER=${SQL_SERVER}
+      - SQL_DATABASE=${JOB_DATABASE}
+      - SQL_USER=${SQL_USER}
+      - SQL_PASSWORD=${SQL_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - JWT_AUDIENCE=${JWT_AUDIENCE}
+      - JWT_TOKEN_LIFETIME=${JWT_TOKEN_LIFETIME}
+    depends_on:
+      - sql-server
+    networks:
+      - backend-network
+
 networks:
   backend-network:
     driver: bridge
