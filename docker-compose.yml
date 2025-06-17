@@ -73,6 +73,27 @@ services:
     networks:
       - backend-network
 
+  moderator-service:
+    image: mykytadiachenko/pidrobitok-moderator-service:latest
+    ports:
+      - "8086:8080"
+      - "8087:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - SQL_SERVER=${SQL_SERVER}
+      - SQL_DATABASE=${MODERATOR_DATABASE}
+      - SQL_USER=${SQL_USER}
+      - SQL_PASSWORD=${SQL_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - JWT_AUDIENCE=${JWT_AUDIENCE}
+      - JWT_TOKEN_LIFETIME=${JWT_TOKEN_LIFETIME}
+    depends_on:
+      sql-server:
+        condition: service_healthy
+    networks:
+      - backend-network
+
   frontend:
     image: yaroff/pidrobitok-front:latest
     ports:
@@ -81,6 +102,8 @@ services:
       auth-service:
         condition: service_started
       job-service:
+        condition: service_started
+      moderator-service:
         condition: service_started
     networks:
       - backend-network
