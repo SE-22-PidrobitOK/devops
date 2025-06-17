@@ -27,9 +27,9 @@ services:
 
   auth-service:
     image: nureternovyidaniil/pidrobitok-auth-service:latest
-    expose:
-      - "8080"
-      - "8081"
+    ports:
+      - "8082:8080"
+      - "8083:8081"
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - SQL_SERVER=${SQL_SERVER}
@@ -47,9 +47,9 @@ services:
 
   job-service:
     image: andriilavrovnure/pidrobitok-job-service:latest
-    expose:
-      - "8080"
-      - "8081"
+    ports:
+      - "8084:8080"
+      - "8085:8081"
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - SQL_SERVER=${SQL_SERVER}
