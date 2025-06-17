@@ -13,6 +13,12 @@ services:
       - sqldata:/var/opt/mssql
     networks:
       - backend-network
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 10s bash -c 'until printf \"\" 2>>/dev/null >>/dev/tcp/localhost/1433; do sleep 1; done'"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
 
   nginx:
     build:
@@ -41,7 +47,8 @@ services:
       - JWT_AUDIENCE=${JWT_AUDIENCE}
       - JWT_TOKEN_LIFETIME=${JWT_TOKEN_LIFETIME}
     depends_on:
-      - sql-server
+      sql-server:
+        condition: service_healthy
     networks:
       - backend-network
 
@@ -61,7 +68,8 @@ services:
       - JWT_AUDIENCE=${JWT_AUDIENCE}
       - JWT_TOKEN_LIFETIME=${JWT_TOKEN_LIFETIME}
     depends_on:
-      - sql-server
+      sql-server:
+        condition: service_healthy
     networks:
       - backend-network
 
@@ -70,8 +78,10 @@ services:
     ports:
       - "3000:5173"
     depends_on:
-      - auth-service
-      - job-service
+      auth-service:
+        condition: service_started
+      job-service:
+        condition: service_started
     networks:
       - backend-network
 
