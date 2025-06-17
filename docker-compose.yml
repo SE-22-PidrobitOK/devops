@@ -65,6 +65,16 @@ services:
     networks:
       - backend-network
 
+  frontend:
+    image: yaroff/pidrobitok-front:latest
+    ports:
+      - "3000:5173"
+    depends_on:
+      - auth-service
+      - job-service
+    networks:
+      - backend-network
+
 networks:
   backend-network:
     driver: bridge
